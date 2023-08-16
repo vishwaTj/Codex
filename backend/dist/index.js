@@ -8,6 +8,7 @@ const app = (0, express_1.default)();
 const port = 3000;
 const connectDB = require("./config/db");
 connectDB();
+app.use(express_1.default.json());
 app.use("/api", require("./Routes/User"));
 app.listen(port, (err) => {
     if (err) {

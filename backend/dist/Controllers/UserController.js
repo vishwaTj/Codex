@@ -8,13 +8,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const User = require("../Models/User");
 module.exports.newUser = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            console.log("User request route created");
-            res.status(200).json({ message: "chala jata hun kisi ki dfun mein" });
+            const { name, email, password, avatar } = req.body;
+            if (!name || !email || !password) {
+                res.status(400);
+                throw new Error("Please Enter all the Fields");
+            }
+            const userExists = yield User.findOne({ email });
+            if (userExists) {
+                res.status(400);
+                throw new Error("User already exists");
+            }
+            const user = yield User.create({
+                name,
+                password,
+                email,
+                avatar,
+            })
+                .then(res.status(200).json({ message: "User successfully registered" }))
+                .catch((error) => {
+                res.status(400).json({
+                    message: `There was an error registering the user ${error}`,
+                });
+            });
         }
-        catch (error) { }
+        catch (error) {
+            console.log(`There is an error registering error: ${error}`);
+        }
     });
 };

@@ -11,6 +11,7 @@ interface Error {
 
 connectDB();
 
+app.use(express.json());
 app.use("/api", require("./Routes/User"));
 
 app.listen(port, (err?: Error) => {
