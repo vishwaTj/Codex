@@ -9,7 +9,7 @@ type user = {
   avatar: String;
 };
 
-module.exports.newUser = async function (req?: any, res?: any) {
+module.exports.SignUp = async function (req?: any, res?: any) {
   try {
     const { name, email, password, avatar } = req.body;
 
@@ -39,5 +39,33 @@ module.exports.newUser = async function (req?: any, res?: any) {
       });
   } catch (error) {
     console.log(`There is an error registering error: ${error}`);
+  }
+};
+
+module.exports.SignIn = async (req?: any, res?: any) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      res.status(400);
+      throw new Error(`Please fill the password  and email id fields`);
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      res.status(400);
+      throw new Error(`User not found`);
+    }
+
+    if (user.password !== password) {
+      res.status(400);
+      throw new Error(`Please Enter the correct password`);
+    }
+
+    res.status(200).json({ user });
+  } catch (error: any) {
+    res
+      .status(400)
+      .json({ message: `There was an error logging in error:${error}` });
   }
 };

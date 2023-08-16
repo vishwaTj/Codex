@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const User = require("../Models/User");
-module.exports.newUser = function (req, res) {
+module.exports.SignUp = function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { name, email, password, avatar } = req.body;
@@ -41,3 +41,27 @@ module.exports.newUser = function (req, res) {
         }
     });
 };
+module.exports.SignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            res.status(400);
+            throw new Error(`Please fill the password  and email id fields`);
+        }
+        const user = yield User.findOne({ email });
+        if (!user) {
+            res.status(400);
+            throw new Error(`User not found`);
+        }
+        if (user.password !== password) {
+            res.status(400);
+            throw new Error(`Please Enter the correct password`);
+        }
+        res.status(200).json({ user });
+    }
+    catch (error) {
+        res
+            .status(400)
+            .json({ message: `There was an error logging in error:${error}` });
+    }
+});
