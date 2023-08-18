@@ -65,3 +65,16 @@ module.exports.SignIn = (req, res) => __awaiter(void 0, void 0, void 0, function
             .json({ message: `There was an error logging in error:${error}` });
     }
 });
+module.exports.Update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = req.body;
+        console.log("data");
+        const user = yield User.findOneAndUpdate({ email: data.email }, data);
+        console.log(user);
+        console.log(user);
+        res.status(200).json(user);
+    }
+    catch (error) {
+        res.status(400).json({ message: `Error while updating the info` });
+    }
+});

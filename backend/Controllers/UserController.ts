@@ -69,3 +69,14 @@ module.exports.SignIn = async (req?: any, res?: any) => {
       .json({ message: `There was an error logging in error:${error}` });
   }
 };
+
+module.exports.UpdateUser = async (req?: any, res?: any) => {
+  try {
+    const data = req.body;
+    const filter = { email: data.email };
+    const user = await User.findOneAndUpdate(filter, data);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ message: `Error while updating the info` });
+  }
+};
