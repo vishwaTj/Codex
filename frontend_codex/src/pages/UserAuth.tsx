@@ -7,16 +7,12 @@ import {
   Image,
   Heading,
 } from "@chakra-ui/react";
-import {
-  FormControl,
-  FormLabel,
-  FormHelperText,
-  Stack,
-} from "@chakra-ui/react";
-import { Box } from "@chakra-ui/react";
-import { Input } from "@chakra-ui/react";
 
-const Login = () => {
+import { Box } from "@chakra-ui/react";
+import Login from "../components/Authentication/Login";
+import SignUp from "../components/Authentication/SignUp";
+
+const UserAuth = () => {
   return (
     <div
       style={{
@@ -44,9 +40,11 @@ const Login = () => {
           />
         </Box>
       </Box>
+
       <div
         style={{ height: "100%", width: "2px", backgroundColor: "black" }}
       ></div>
+
       <Box
         w="80%"
         h="100%"
@@ -58,37 +56,17 @@ const Login = () => {
         <Box border={"1px solid black"} borderRadius={"06px"} w={"60%"}>
           <Tabs defaultIndex={1}>
             <TabPanels>
+              {/* Sign In Tab Pane */}
               <TabPanel>
-                <FormControl>
-                  <Stack>
-                    <FormLabel mb={"-2px"}>Email address</FormLabel>
-                    <Input type="email" />
-                    <FormHelperText mt={"1px"}>
-                      We'll never share your email.
-                    </FormHelperText>
-                    <FormLabel mb={"-2px"}>password</FormLabel>
-                    <Input type="password" />
-                  </Stack>
-                </FormControl>
+                <Login />
               </TabPanel>
+
+              {/* Sign Up Tab pane */}
               <TabPanel>
-                <FormControl>
-                  <Stack>
-                    <FormLabel mb={"-2px"}>Name</FormLabel>
-                    <Input type="text" />
-                    <FormLabel mb={"-2px"}>Email address</FormLabel>
-                    <Input type="email" />
-                    <FormHelperText>
-                      We'll never share your email.
-                    </FormHelperText>
-                    <FormLabel mb={"-2px"}>password</FormLabel>
-                    <Input type="password" />
-                    <FormLabel mb={"-2px"}>avatar</FormLabel>
-                    <Input type="text" />
-                  </Stack>
-                </FormControl>
+                <SignUp />
               </TabPanel>
             </TabPanels>
+
             <TabList>
               <Tab w="100%">SignIn</Tab>
               <Tab w="100%">SIgnUp</Tab>
@@ -100,4 +78,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default UserAuth;

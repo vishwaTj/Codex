@@ -2,6 +2,7 @@
   "name": "frontend_codex",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "@chakra-ui/react": "^2.8.0",
     "@emotion/react": "^11.11.1",
@@ -13,6 +14,7 @@
     "@types/node": "^16.18.40",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "axios": "^1.4.0",
     "framer-motion": "^10.16.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
