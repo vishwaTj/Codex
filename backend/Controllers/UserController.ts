@@ -1,4 +1,5 @@
 import { matchedData, validationResult } from "express-validator";
+import generateToken from "../config/generateToken";
 
 const User = require("../Models/User");
 
@@ -9,6 +10,7 @@ type user = {
   avatar: String;
 };
 
+//  User sign up function /////////////////////////
 module.exports.SignUp = async function (req?: any, res?: any) {
   try {
     const { name, email, password, avatar } = req.body;
@@ -30,18 +32,28 @@ module.exports.SignUp = async function (req?: any, res?: any) {
       password,
       email,
       avatar,
-    })
-      .then(res.status(200).json({ message: "User successfully registered" }))
-      .catch((error: any) => {
-        res.status(400).json({
-          message: `There was an error registering the user ${error}`,
-        });
+    });
+
+    if (user) {
+      res.status(201).json({
+        message: "User successfully created",
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        token: generateToken(user._id),
       });
+    } else {
+      res.status(400).json({
+        message: `There was an error registering the user`,
+      });
+    }
   } catch (error) {
     console.log(`There is an error registering error: ${error}`);
   }
 };
 
+//  User sign in function  //////////////////////////////
 module.exports.SignIn = async (req?: any, res?: any) => {
   try {
     const { email, password } = req.body;
@@ -57,12 +69,19 @@ module.exports.SignIn = async (req?: any, res?: any) => {
       throw new Error(`User not found`);
     }
 
-    if (user.password !== password) {
+    if (user && (await user.matchPassword(password))) {
+      res.status(200).json({
+        message: "User successfully created",
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        token: generateToken(user._id),
+      });
+    } else {
       res.status(400);
       throw new Error(`Please Enter the correct password`);
     }
-
-    res.status(200).json({ user });
   } catch (error: any) {
     res
       .status(400)
