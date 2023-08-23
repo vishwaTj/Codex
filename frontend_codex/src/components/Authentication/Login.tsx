@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [show, setShow] = useState(false);
@@ -19,6 +20,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const toast = useToast();
+  const navigate = useNavigate();
 
   const setLogin = async () => {
     setLoading(true);
@@ -53,6 +55,7 @@ const Login = () => {
 
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
+      navigate("/home");
     } catch (error) {
       console.log(error);
       toast({

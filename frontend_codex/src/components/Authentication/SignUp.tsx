@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   FormControl,
   FormHelperText,
@@ -12,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -21,6 +21,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
 
+  const navigate = useNavigate();
   const toast = useToast();
 
   const setSignUp = async () => {
@@ -52,7 +53,7 @@ const SignUp = () => {
         ...data1,
       };
       toast({
-        title: "Login successful",
+        title: "Registration successful",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -60,6 +61,7 @@ const SignUp = () => {
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
+      navigate("/home");
     } catch (error) {
       toast({
         title: "Error occurred while Login",
@@ -72,7 +74,54 @@ const SignUp = () => {
     }
   };
 
-  const postPicture = (e?: any) => {};
+  const postPicture = (e?: any | null) => {
+    let pics = e.target.files[0];
+    setLoading(true);
+    if (pics === undefined) {
+      toast({
+        title: "Pleas select an Image",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      return;
+    }
+
+    if (pics.type === "image/jpeg" || pics.type === "image/png") {
+      const data = new FormData();
+      console.log(pics.data);
+      data.append("file", pics);
+      data.append("upload_preset", "Codex_");
+      data.append("cloud_name", "dxuekat34");
+      // you have to add /upload after the api for it to work
+      //  remember it onlu=y api link wont work
+      fetch("https://api.cloudinary.com/v1_1/dxuekat34/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.url.toString());
+          setAvatar(data.url.toString());
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+          setLoading(false);
+        });
+    } else {
+      toast({
+        title: "Please Select an Image!",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+      setLoading(false);
+      return;
+    }
+  };
 
   return (
     <VStack spacing="5px">
@@ -108,7 +157,13 @@ const SignUp = () => {
         <FormLabel mt={"8px"}>Upload your Picture</FormLabel>
         <Input type="file" p={1.5} accept="image/*" onChange={postPicture} />
 
-        <Button w="80%" mt="8px" colorScheme="blue" onClick={setSignUp}>
+        <Button
+          w="80%"
+          mt="8px"
+          colorScheme="blue"
+          onClick={setSignUp}
+          isLoading={loading}
+        >
           Submit
         </Button>
       </FormControl>
